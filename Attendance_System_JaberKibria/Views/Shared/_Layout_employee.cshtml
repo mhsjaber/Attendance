@@ -18,27 +18,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Admin Panel", "Index", "Admins", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Employee Section", "Index", "Employees", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (Session["AdminUsername"] != null && Session["AdminPassword"] != null)
+                    @if (Session["Username"] != null && Session["Password"] != null)
                     {
-                        <li>@Html.ActionLink("Admins", "Index", "Admins")</li>
-                        <li>@Html.ActionLink("Employees", "Index", "EmployeeAdmin")</li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Attendance
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Day-wise Report", "Daywise", "Attendances")</li>
-                                <li>@Html.ActionLink("Individual Report", "Personwise", "Attendances")</li>
-                                <li>@Html.ActionLink("Create Day", "Newday", "Attendances")</li>
-                                <li>@Html.ActionLink("Update", "Update", "Attendances")</li>
-                            </ul>
-                        </li>
-                        <li>@Html.ActionLink("Logout", "Logout", "Admins")</li>
+                        <li>@Html.ActionLink("Attendance", "Index", "Employees")</li>
+                        <li>@Html.ActionLink("Logout", "Logout", "Employees")</li>
                     }
 
                     @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@

@@ -12,9 +12,9 @@ namespace Attendance_System_JaberKibria.Controllers
     public class AdminsController : Controller
     {
         private readonly ImpAdmins _admins;
-        public AdminsController(ImpAdmins admins)
+        public AdminsController()
         {
-            _admins = admins;
+            _admins = new ImpAdmins();
         }
 
         [HttpGet]

@@ -25,7 +25,7 @@ namespace Attendance_System_JaberKibria.DAL
 
         public IEnumerable<Admin> GetAllAdmins()
         {
-            _query = @"SELECT a1.Name, a1.Username, a1.CreateDate, a1.UpdateDate, a2.Username, a3.Username FROM Admins a1 LEFT OUTER JOIN Admins a2 ON a1.CreatedBy = a2.Id LEFT OUTER JOIN Admins a3 ON a1.UpatedBy = a3.Id WHERE a1.Status = 1";
+            _query = @"SELECT * FROM Admins WHERE Status = 1";
             var allAdmins = _db.Database.SqlQuery<Admin>(_query).ToList();
             return allAdmins;
         }
