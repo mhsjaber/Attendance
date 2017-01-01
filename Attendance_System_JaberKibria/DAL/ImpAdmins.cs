@@ -1,4 +1,5 @@
 ﻿using Attendance_System_JaberKibria.Common;
+using Attendance_System_JaberKibria.CustomModels;
 using Attendance_System_JaberKibria.DAL;
 using Attendance_System_JaberKibria.Models;
 using System;
@@ -23,14 +24,14 @@ namespace Attendance_System_JaberKibria.DAL
             _connectionString = Global.ConnectionString;
         }
 
-        public IEnumerable<Admin> GetAllAdmins()
+        public IEnumerable<AdminCustom> GetAllAdmins()
         {
-            _query = @"SELECT * FROM Admins WHERE Status = 1";
-            var allAdmins = _db.Database.SqlQuery<Admin>(_query).ToList();
+            _query = @"SELECT a1.*, a2.Username CreatedAdmin, a3.Username UpdatedAdmin FROM Admins a1 LEFT OUTER JOIN Admins a2 ON a1.CreatedBy = a2.Id LEFT OUTER JOIN Admins a3 ON a1.UpatedBy = a3.Id WHERE a1.Status = 1";
+            var allAdmins = _db.Database.SqlQuery<AdminCustom>(_query).ToList();
             return allAdmins;
         }
 
-        public bool AddOrUpdateAdmin(Admin admin)
+        public int AddOrUpdateAdmin(Admin admin)
         {
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -55,6 +56,10 @@ namespace Attendance_System_JaberKibria.DAL
                     }
                     else
                     {
+                        //_query = string.Format(@"INSERT INTO Admins (Name,Username,Password,CreatedBy,CreateDate,Status)" +
+                        //                       " VALUES('{0}', '{1}', '{2}', '{3}', '{4}','1')SELECT SCOPE_IDENTITY()"
+                        //                       , admin.Name, admin.Username, admin.Password, AdminId, dateNow);
+
                         _query = string.Format(@"INSERT INTO Admins (Name,Username,Password,CreatedBy,CreateDate,Status)" +
                                                " VALUES(@Name,@Username,@Password,@CreatedBy,@CreateDate,1)");
                         command.Parameters.AddWithValue("@Name", admin.Name);
@@ -63,17 +68,18 @@ namespace Attendance_System_JaberKibria.DAL
                         command.Parameters.AddWithValue("@CreateDate", dateNow);
                         command.Parameters.AddWithValue("@CreatedBy", AdminId);
                         command.CommandText = _query;
+                        command.ExecuteNonQuery();
 
                     }
 
                     sqlTran.Commit();
-                    return true;
+                    return 1;
 
                 }
-                catch (Exception ex)
+                catch (SqlException ex)
                 {
                     sqlTran.Rollback();
-                    return false;
+                    return ex.Number;
                 }
             }
         }
@@ -92,6 +98,12 @@ namespace Attendance_System_JaberKibria.DAL
                 return false;
             }
 
+        }
+        public IEnumerable<Admin> Login(string Username)
+        {
+            _query = string.Format(@"SELECT * FROM Admins WHERE Username = '{0}' AND Status = 1", Username);
+            var loggedAdmin = _db.Database.SqlQuery<Admin>(_query).ToList();
+            return loggedAdmin;
         }
     }
 }

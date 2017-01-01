@@ -161,6 +161,9 @@
     <Compile Include="Common\Global.cs" />
     <Compile Include="Common\SetupUtil.cs" />
     <Compile Include="Controllers\AdminsController.cs" />
+    <Compile Include="Controllers\AEmployeeController.cs" />
+    <Compile Include="Controllers\AttendancesController.cs" />
+    <Compile Include="CustomModels\EmployeeCustom.cs" />
     <Compile Include="DAL\IAdmins.cs" />
     <Compile Include="DAL\IAttendance.cs" />
     <Compile Include="DAL\IEmployees.cs" />
@@ -171,9 +174,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\AccessVerify.cs" />
     <Compile Include="Models\Admin.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="CustomModels\AdminCustom.cs" />
     <Compile Include="Models\Attendance.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -259,6 +264,9 @@
     <Content Include="Views\Admins\Index.cshtml" />
     <Content Include="Views\Admins\Login.cshtml" />
     <Content Include="Views\Shared\_Layout_employee.cshtml" />
+    <Content Include="Views\AEmployee\Index.cshtml" />
+    <Content Include="Views\AEmployee\Create.cshtml" />
+    <Content Include="Views\Attendances\Createday.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

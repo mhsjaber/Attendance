@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AttendanceSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Admins">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="35" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="25" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpatedBy" Type="int" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Attendance">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmployeeId" Type="int" Nullable="false" />
+    <Property Name="InTime" Type="datetime" />
+    <Property Name="OutTime" Type="datetime" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="UpdatedBy" Type="int" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="CreatedBy" Type="int" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Employees">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedBy" Type="int" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Admins_Admins">
+    <End Role="Admins" Type="Self.Admins" Multiplicity="0..1" />
+    <End Role="Admins1" Type="Self.Admins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Admins1">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Admins_Admins1">
+    <End Role="Admins" Type="Self.Admins" Multiplicity="0..1" />
+    <End Role="Admins1" Type="Self.Admins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Admins1">
+        <PropertyRef Name="UpatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attendance_Admins">
+    <End Role="Admins" Type="Self.Admins" Multiplicity="0..1" />
+    <End Role="Attendance" Type="Self.Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attendance_Admins1">
+    <End Role="Admins" Type="Self.Admins" Multiplicity="1" />
+    <End Role="Attendance" Type="Self.Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attendance_Employees">
+    <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+    <End Role="Attendance" Type="Self.Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Admins">
+    <End Role="Admins" Type="Self.Admins" Multiplicity="1" />
+    <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employees">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Admins1">
+    <End Role="Admins" Type="Self.Admins" Multiplicity="0..1" />
+    <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employees">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AttendanceSystemModelStoreContainer">
+    <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Attendance" EntityType="Self.Attendance" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Admins_Admins" Association="Self.FK_Admins_Admins">
+      <End Role="Admins" EntitySet="Admins" />
+      <End Role="Admins1" EntitySet="Admins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Admins_Admins1" Association="Self.FK_Admins_Admins1">
+      <End Role="Admins" EntitySet="Admins" />
+      <End Role="Admins1" EntitySet="Admins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Attendance_Admins" Association="Self.FK_Attendance_Admins">
+      <End Role="Admins" EntitySet="Admins" />
+      <End Role="Attendance" EntitySet="Attendance" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Attendance_Admins1" Association="Self.FK_Attendance_Admins1">
+      <End Role="Admins" EntitySet="Admins" />
+      <End Role="Attendance" EntitySet="Attendance" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Attendance_Employees" Association="Self.FK_Attendance_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="Attendance" EntitySet="Attendance" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Admins" Association="Self.FK_Employees_Admins">
+      <End Role="Admins" EntitySet="Admins" />
+      <End Role="Employees" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Admins1" Association="Self.FK_Employees_Admins1">
+      <End Role="Admins" EntitySet="Admins" />
+      <End Role="Employees" EntitySet="Employees" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

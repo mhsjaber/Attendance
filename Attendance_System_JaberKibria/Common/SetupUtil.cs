@@ -1,4 +1,5 @@
-﻿using Attendance_System_JaberKibria.Models;
+﻿using Attendance_System_JaberKibria.CustomModels;
+using Attendance_System_JaberKibria.Models;
 using Attendance_System_JaberKibria.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -9,22 +10,21 @@ namespace Attendance_System_JaberKibria.Common
 {
     public static class SetupUtil
     {
-        public static AdminViewModel Convert(Admin admin)
+        public static AdminViewModel Convert(AdminCustom admin)
         {
             try
             {
                 var adminVM = new AdminViewModel();
                 adminVM.Id = admin.Id;
                 adminVM.Name = admin.Name;
-                adminVM.Password = admin.Password;
                 adminVM.Username = admin.Username;
                 adminVM.Status = admin.Status;
                 adminVM.CreateDate = admin.CreateDate;
-                adminVM.CreatedAdmin = admin.Admin2.Username;
-                adminVM.UpdateDate = admin.CreateDate;
-                adminVM.UpdatedAdmin = admin.Admin1.Username;
+                adminVM.UpdateDate = admin.UpdateDate;
                 adminVM.UpdatedBy = admin.UpatedBy;
                 adminVM.CreatedBy = admin.CreatedBy;
+                adminVM.UpdatedAdmin = admin.UpdatedAdmin;
+                adminVM.CreatedAdmin = admin.CreatedAdmin;
 
                 return adminVM;
             }
@@ -57,20 +57,19 @@ namespace Attendance_System_JaberKibria.Common
             }
         }
 
-        public static EmployeeViewModel Convert(Employee employee)
+        public static EmployeeViewModel Convert(EmployeeCustom employeeCustom)
         {
             try
             {
                 var employeeVM = new EmployeeViewModel();
-                employeeVM.Id = employee.Id;
-                employeeVM.Name = employee.Name;
-                employeeVM.Password = employee.Password;
-                employeeVM.Username = employee.Username;
-                employeeVM.Status = employee.Status;
-                employeeVM.CreateDate = employee.CreateDate;
-                employeeVM.CreatedAdmin = employee.AdminCreatedBy.Username;
-                employeeVM.UpdateDate = employee.CreateDate;
-                employeeVM.UpdatedAdmin = employee.AdminUpdatedBy.Username;
+                employeeVM.Id = employeeCustom.Id;
+                employeeVM.Name = employeeCustom.Name;
+                employeeVM.Username = employeeCustom.Username;
+                employeeVM.Status = employeeCustom.Status;
+                employeeVM.CreateDate = employeeCustom.CreateDate;
+                employeeVM.CreatedAdmin = employeeCustom.CreatedAdmin;
+                employeeVM.UpdateDate = employeeCustom.CreateDate;
+                employeeVM.UpdatedAdmin = employeeCustom.UpdatedAdmin;
 
                 return employeeVM;
             }

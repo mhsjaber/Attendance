@@ -19,10 +19,10 @@
             @Html.DisplayNameFor(model => model.Username)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreatedBy)
+            @Html.DisplayNameFor(model => model.CreatedAdmin)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
+            @Html.DisplayNameFor(model => model.UpdateDate)
         </th>
     </tr>
 
@@ -35,10 +35,10 @@
             @Html.DisplayFor(modelItem => item.Username)
         </td>
         <td>
-
+            @Html.DisplayFor(modelItem => item.CreatedAdmin)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.CreateDate)
+            @Html.DisplayFor(modelItem => item.UpdateDate)
         </td>
     </tr>
 }

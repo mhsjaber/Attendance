@@ -1,4 +1,4 @@
-﻿@model JaberKibria.ViewModels.AdminViewModel
+﻿@model Attendance_System_JaberKibria.ViewModels.AdminViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -45,7 +45,7 @@
                 <input type="submit" value="Create" class="btn btn-default" />
                 @if (ViewBag.Message != null)
                 {
-                    @ViewBag.Message
+                    <span style="color: indianred">@Html.Raw(ViewBag.Message)</span>
                 }
             </div>
         </div>

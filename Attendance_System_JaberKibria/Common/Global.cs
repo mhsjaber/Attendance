@@ -26,7 +26,7 @@ namespace Attendance_System_JaberKibria.Common
             {
                 if (_connectionString == null)
                 {
-                    _connectionString = WebConfigurationManager.ConnectionStrings["AttendanceSystemEntities"].ConnectionString;
+                    _connectionString = @"data source=JABER\SQLEXPRESS;initial catalog=AttendanceSystem;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework";
                 }
                 return _connectionString;
             }
