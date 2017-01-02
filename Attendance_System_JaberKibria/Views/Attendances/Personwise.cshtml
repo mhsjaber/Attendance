@@ -1,0 +1,193 @@
+﻿@model IEnumerable<Attendance_System_JaberKibria.ViewModels.EmployeeViewModel>
+
+@{
+    ViewBag.Title = "Individual Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js"></script>
+<script src="~/Content/js/moment.js"></script>
+<h2>Individual Report</h2>
+<hr />
+
+<form class="form-horizontal">
+    <div class="col-sm-5">
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="EmployeeId">Employee : </label>
+            <div class="col-sm-8">
+                <select class="form-control" name="EmployeeId" id="EmployeeId">
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.Id">@item.Name ~ @item.Username</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label class="control-label col-sm-3" for="Month">Month : </label>
+            <div class="col-sm-9">
+                <select class="form-control" name="Month" id="Month">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label col-sm-3" for="Year">Year : </label>
+            <div class="col-sm-9">
+                <select class="form-control" name="Year" id="Year">
+                    <option>2016</option>
+                    <option>2017</option>
+                    <option>2018</option>
+                    <option>2019</option>
+                    <option>2020</option>
+                    <option>2021</option>
+                    <option>2022</option>
+                    <option>2023</option>
+                    <option>2024</option>
+                    <option>2025</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-primary" onclick="showData()">Show</button>
+            </div>
+        </div>
+    </div>
+</form>
+<br>
+<table class="table table-bordered table-striped table-hover" id="dataTable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Hour</th>
+            <th>##</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <thead>
+        <tr>
+            <th colspan="3" style="text-align:right;">Total Hour</th>
+            <th colspan="2"><span id="thour"></span></th>
+        </tr>
+    </thead>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'csv'
+            ]
+        });
+    });
+
+    function showData()
+    {
+        var id = $('#EmployeeId').val();
+        var month = $('#Month').val();
+        var year = $('#Year').val();
+
+        $.ajax({
+            url: '/Attendances/Personwise',
+            type: 'post',
+            data: { Id: id, Month: month, Year : year },
+            dataType: 'json',
+            success: function (data) {
+                $('#dataTable')
+                        .DataTable()
+                        .clear()
+                        .draw();
+                var totalSec = 0;
+                $.each(data, function (i, item) {
+                    var sec = 0;
+                    var hh = 0;
+                    var mm = 0;
+                    var flag = 'Absent';
+                    var whour = 'Undefined';
+                    var date = moment(item.Date).format('MMMM DD, YYYY');
+                    var checkin = (item.InTime != null) ? moment(item.InTime).format('hh:mm A') : "-";
+                    var checkout = (item.OutTime != null) ? moment(item.OutTime).format('hh:mm A') : "-";
+
+                    if (item.InTime != null && item.OutTime != null) {
+
+                        sec = moment(item.OutTime).diff(moment(item.InTime)) / 1000;
+                        totalSec += sec;
+                        hh = (parseInt)(sec / 3600);
+                        mm = (parseInt)((sec % 3600) / 60);
+                        whour = ('0' + hh).slice(-2) + ':' + ('0' + mm).slice(-2) + 'h';
+                    }
+                    else if (item.InTime == null && item.OutTime == null) {
+                        whour = '00:00h';
+                    }
+
+                    if (moment(date) < moment()) {
+                        if (hh >= 7) {
+                            flag = ' <label class="label label-success"><i class="glyphicon glyphicon-ok"></i></label>';
+                        }
+                        else if (sec > 1) {
+                            flag = ' <label class="label label-danger"><i class="glyphicon glyphicon-remove"></i></label>';
+                        }
+                    }
+                    else {
+                        flag = 'N/A'
+                    }
+
+
+
+                    $('#dataTable')
+                        .DataTable()
+                        .row
+                        .add([
+                            date,
+                            checkin,
+                            checkout,
+                            whour,
+                            flag
+                        ])
+                        .draw();
+                });
+
+                var th = (parseInt)(totalSec / 3600);
+                var tm = (parseInt)((totalSec % 3600) / 60);
+                var thour = ('0' + th).slice(-3) + ':' + ('0' + tm).slice(-2) + 'h';
+
+                $('#thour').html(thour);
+            },
+            error: function (data) {
+                $('#thour').html('00:00h');
+                console.log(data.error);
+            }
+        });
+    }
+</script>

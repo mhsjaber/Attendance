@@ -122,22 +122,22 @@ namespace Attendance_System_JaberKibria.Controllers
         public ActionResult Login()
         {
             var adminViewModel = new AdminViewModel();
-            //if (_accessVerify.AdminVerify())
-            //{
-            //    return RedirectToAction("Index");
-            //}
-            //else
-            //{
+            if (_accessVerify.AdminVerify())
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
                 Session.Abandon();
                 return View(adminViewModel);
-            //}
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(Admin admin)
         {
-            if (_accessVerify.AdminVerify())
+            if (!_accessVerify.AdminVerify())
             {
                 var adminViewModel = new AdminViewModel(); 
                 adminViewModel.Username = admin.Username;
@@ -149,6 +149,7 @@ namespace Attendance_System_JaberKibria.Controllers
                     if (PasswordHelper.VerifyHash(admin.Password, "SHA512", user.First().Password))
                     {
                         Session["AdminUsername"] = user.First().Username;
+                        Session["AdminName"] = user.First().Username;
                         Session["AdminPassword"] = user.First().Password;
                         Session["AdminId"] = user.First().Id;
                         return RedirectToAction("Index");

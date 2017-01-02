@@ -1,4 +1,6 @@
-﻿using Attendance_System_JaberKibria.DAL;
+﻿using Attendance_System_JaberKibria.Common;
+using Attendance_System_JaberKibria.CustomModels;
+using Attendance_System_JaberKibria.DAL;
 using Attendance_System_JaberKibria.Helpers;
 using Attendance_System_JaberKibria.Models;
 using Attendance_System_JaberKibria.ViewModels;
@@ -21,7 +23,7 @@ namespace Attendance_System_JaberKibria.Controllers
             _attendances = new ImpAttendance();
             _accessVerify = new AccessVerify();
         }
-        // GET: Attendances
+
         public ActionResult Index()
         {
             return View();
@@ -34,8 +36,8 @@ namespace Attendance_System_JaberKibria.Controllers
 
             if (_accessVerify.AdminVerify())
             {
-                AttendanceViewModel attendanceViewModel = new AttendanceViewModel();
-
+                var attendanceViewModel = new AttendanceViewModel();
+                attendanceViewModel.Date = DateTime.Today;
                 return View(attendanceViewModel);
             }
             else
@@ -51,7 +53,7 @@ namespace Attendance_System_JaberKibria.Controllers
         {
             if (_accessVerify.AdminVerify())
             {
-                AttendanceViewModel attendanceViewModel = new AttendanceViewModel();
+                var attendanceViewModel = new AttendanceViewModel();
                 attendanceViewModel.Date = attendance.Date;
                 try
                 {
@@ -60,9 +62,9 @@ namespace Attendance_System_JaberKibria.Controllers
                     {
                         ViewBag.Message = "Created successfully!";
                     }
-                    else
+                    else if(res== "2627")
                     {
-                        ViewBag.Message = res;
+                        ViewBag.Message = "Date already created.";
                     }
                 }
                 catch (Exception ex)
@@ -77,6 +79,157 @@ namespace Attendance_System_JaberKibria.Controllers
                 return RedirectToAction("Login", "Admins");
             }
         }
+
+        [HttpGet]
+        public ActionResult Daywise()
+        {
+            if (_accessVerify.AdminVerify())
+            {
+                return View();
+            }
+            else
+            {
+                Session.Abandon();
+                return RedirectToAction("Login", "Admins");
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Daywise(DateTime Date)
+        {
+            if (_accessVerify.AdminVerify())
+            {
+                var attendances = new List<AttendanceViewModel>() { };
+
+                foreach (var att in _attendances.DaywiseData(Date))
+                {
+                    attendances.Add(SetupUtil.Convert(att));
+                }
+
+                return Json(attendances);
+            }
+            else
+            {
+                Session.Abandon();
+                return null;
+            }
+        }
+
+
+
+        [HttpGet]
+        public ActionResult Personwise()
+        {
+            if (_accessVerify.AdminVerify())
+            {
+                var employeeViewModel = new List<EmployeeViewModel>() { };
+
+                foreach (var employee in _employees.GetAllEmployees())
+                {
+                    employeeViewModel.Add(SetupUtil.Convert(employee));
+                }
+                employeeViewModel = employeeViewModel.ToList();
+                return View(employeeViewModel);
+            }
+            else
+            {
+                Session.Abandon();
+                return RedirectToAction("Login", "Admins");
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Personwise(int Id, int Month, int Year)
+        {
+            if (_accessVerify.AdminVerify())
+            {
+                var attendances = new List<AttendanceViewModel>() { };
+
+                foreach (var att in _attendances.PersonwiseData(Id, Month, Year))
+                {
+                    attendances.Add(SetupUtil.Convert(att));
+                }
+
+                return Json(attendances);
+            }
+            else
+            {
+                Session.Abandon();
+                return null;
+            }
+        }
+
+        [HttpGet]
+        public ActionResult UpdateTime()
+        {
+            if (_accessVerify.AdminVerify())
+            {
+                var employeeViewModel = new List<EmployeeViewModel>() { };
+
+                foreach (var employee in _employees.GetAllEmployees())
+                {
+                    employeeViewModel.Add(SetupUtil.Convert(employee));
+                }
+                employeeViewModel = employeeViewModel.ToList();
+                return View(employeeViewModel);
+            }
+            else
+            {
+                Session.Abandon();
+                return RedirectToAction("Login", "Admins");
+            }
+        }
+
+
+        [HttpPost]
+        public JsonResult GetDetails(int Id, DateTime Date)
+        {
+            if (_accessVerify.AdminVerify())
+            {
+                try
+                {
+                    var attendanceViewModel = new List<AttendanceViewModel>() { };
+
+                    foreach (var att in _attendances.AttendanceDetails(Id, Date))
+                    {
+                        attendanceViewModel.Add(SetupUtil.Convert(att));
+                    }
+                    return Json(attendanceViewModel);
+                }
+                catch (Exception ex)
+                {
+                    return Json("");
+                }
+            }
+            else
+            {
+                Session.Abandon();
+                return Json("");
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateDetails(Attendance attendance)
+        {
+            if (_accessVerify.AdminVerify())
+            {
+                try
+                {   
+                    var attendanceCustom = SetupUtil.Convert(attendance);
+                    return Json(_attendances.UpdateAttendance(attendanceCustom));
+                }
+                catch (Exception ex)
+                {
+                    return Json("");
+                }
+            }
+            else
+            {
+                Session.Abandon();
+                return Json("");
+            }
+        }
+
 
     }
 }

@@ -68,7 +68,7 @@ namespace Attendance_System_JaberKibria.Common
                 employeeVM.Status = employeeCustom.Status;
                 employeeVM.CreateDate = employeeCustom.CreateDate;
                 employeeVM.CreatedAdmin = employeeCustom.CreatedAdmin;
-                employeeVM.UpdateDate = employeeCustom.CreateDate;
+                employeeVM.UpdateDate = employeeCustom.UpdateDate;
                 employeeVM.UpdatedAdmin = employeeCustom.UpdatedAdmin;
 
                 return employeeVM;
@@ -102,7 +102,7 @@ namespace Attendance_System_JaberKibria.Common
             }
         }
 
-        public static AttendanceViewModel Convert(Attendance attendance)
+        public static AttendanceViewModel Convert(AttendanceCustom attendance)
         {
             try
             {
@@ -111,13 +111,14 @@ namespace Attendance_System_JaberKibria.Common
                 attendanceVM.InTime = attendance.InTime;
                 attendanceVM.OutTime = attendance.OutTime;
                 attendanceVM.UpdateDate = attendance.UpdateDate;
-                attendanceVM.UpdatedAdmin = attendance.AdminUpdateBy.Username;
+                attendanceVM.UpdatedAdmin = attendance.UpdatedAdmin;
                 attendanceVM.UpdatedBy = attendance.UpdatedBy;
                 attendanceVM.CreateDate = attendance.CreateDate;
-                attendanceVM.CreatedAdmin = attendance.AdminCreatedBy.Username;
+                attendanceVM.CreatedAdmin = attendance.CreatedAdmin;
                 attendanceVM.CreatedBy = attendance.CreatedBy;
                 attendanceVM.Date = attendance.Date;
-                attendanceVM.EmployeeName = attendance.Employee.Name;
+                attendanceVM.EmployeeName = attendance.EmployeeName;
+                attendanceVM.EmployeeUsername = attendance.EmployeeUsername;
                 attendanceVM.EmployeeId = attendance.EmployeeId;
 
                 return attendanceVM;
@@ -144,6 +145,29 @@ namespace Attendance_System_JaberKibria.Common
                 attendance.EmployeeId = attendanceVM.EmployeeId;
 
                 return attendance;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static AttendanceCustom Convert(Attendance attendance)
+        {
+            try
+            {
+                var attendanceC = new AttendanceCustom();
+                attendanceC.Id = attendance.Id;
+                attendanceC.InTime = attendance.InTime;
+                attendanceC.OutTime = attendance.OutTime;
+                attendanceC.UpdateDate = attendance.UpdateDate;
+                attendanceC.UpdatedBy = attendance.UpdatedBy;
+                attendanceC.CreateDate = attendance.CreateDate;
+                attendanceC.CreatedBy = attendance.CreatedBy;
+                attendanceC.Date = attendance.Date;
+                attendanceC.EmployeeId = attendance.EmployeeId;
+
+                return attendanceC;
             }
             catch (Exception ex)
             {

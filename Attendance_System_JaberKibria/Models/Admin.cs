@@ -34,7 +34,7 @@ namespace Attendance_System_JaberKibria.Models
         public Nullable<int> UpatedBy { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public int Status { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Admin> AdminsCreatedBy { get; set; }
         public virtual Admin Admin1 { get; set; }

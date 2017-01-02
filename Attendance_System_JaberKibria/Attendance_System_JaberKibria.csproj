@@ -163,6 +163,8 @@
     <Compile Include="Controllers\AdminsController.cs" />
     <Compile Include="Controllers\AEmployeeController.cs" />
     <Compile Include="Controllers\AttendancesController.cs" />
+    <Compile Include="Controllers\EmployeesController.cs" />
+    <Compile Include="CustomModels\AttendanceCustom.cs" />
     <Compile Include="CustomModels\EmployeeCustom.cs" />
     <Compile Include="DAL\IAdmins.cs" />
     <Compile Include="DAL\IAttendance.cs" />
@@ -208,6 +210,14 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datetimepicker\build\jquery.datetimepicker.full.js" />
+    <Content Include="Content\datetimepicker\build\jquery.datetimepicker.full.min.js" />
+    <Content Include="Content\datetimepicker\build\jquery.datetimepicker.min.css" />
+    <Content Include="Content\datetimepicker\build\jquery.datetimepicker.min.js" />
+    <Content Include="Content\datetimepicker\jquery.datetimepicker.css" />
+    <Content Include="Content\datetimepicker\jquery.datetimepicker.js" />
+    <Content Include="Content\datetimepicker\jquery.datetimepicker.min.js" />
+    <Content Include="Content\js\moment.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -267,6 +277,11 @@
     <Content Include="Views\AEmployee\Index.cshtml" />
     <Content Include="Views\AEmployee\Create.cshtml" />
     <Content Include="Views\Attendances\Createday.cshtml" />
+    <Content Include="Views\Attendances\Daywise.cshtml" />
+    <Content Include="Views\Attendances\Personwise.cshtml" />
+    <Content Include="Views\Attendances\UpdateTime.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Employees\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

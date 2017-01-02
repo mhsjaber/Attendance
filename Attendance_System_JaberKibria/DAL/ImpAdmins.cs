@@ -15,11 +15,12 @@ namespace Attendance_System_JaberKibria.DAL
         private readonly AttendanceSystemEntities _db;
         private string _query;
         private string _connectionString;
-        private int AdminId = 1;
+        private int AdminId;
         private DateTime dateNow = DateTime.Now;
 
         public ImpAdmins()
         {
+            AdminId = Convert.ToInt32(HttpContext.Current.Session["AdminId"]);
             _db = Global.dbContext;
             _connectionString = Global.ConnectionString;
         }

@@ -39,7 +39,8 @@ namespace Attendance_System_JaberKibria.Controllers
             }
             else
             {
-                return RedirectToAction("Login");
+                Session.Abandon();
+                return RedirectToAction("Login", "Admins");
             }
         }
 
@@ -56,7 +57,7 @@ namespace Attendance_System_JaberKibria.Controllers
             else
             {
                 Session.Abandon();
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", "Admins");
             }
         }
 
@@ -112,7 +113,7 @@ namespace Attendance_System_JaberKibria.Controllers
             else
             {
                 Session.Abandon();
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", "Admins");
             }
         }
 

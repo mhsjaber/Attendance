@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Attendance_System_JaberKibria.ViewModels
+namespace Attendance_System_JaberKibria.CustomModels
 {
-    public class AttendanceViewModel
+    public class AttendanceCustom
     {
         public string CreatedAdmin { get; internal set; }
         public DateTime CreateDate { get; internal set; }

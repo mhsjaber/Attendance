@@ -24,10 +24,8 @@
                 <ul class="nav navbar-nav">
                     @if (Session["Username"] != null && Session["Password"] != null)
                     {
-                        <li>@Html.ActionLink("Attendance", "Index", "Employees")</li>
                         <li>@Html.ActionLink("Logout", "Logout", "Employees")</li>
                     }
-
                     @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                 </ul>
             </div>

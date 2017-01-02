@@ -1,0 +1,173 @@
+﻿@model IEnumerable<Attendance_System_JaberKibria.ViewModels.EmployeeViewModel>
+
+@{
+    ViewBag.Title = "Update Time";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #updateform {
+        display: none;
+    }
+</style>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="~/Content/datetimepicker/build/jquery.datetimepicker.full.js"></script>
+<link href="~/Content/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />
+<script src="~/Content/js/moment.js"></script>
+
+<h2>Update Time</h2>
+<hr />
+
+<form class="form-horizontal">
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label class="control-label col-sm-3" for="EmployeeId">Employee : </label>
+            <div class="col-sm-9">
+                <select class="form-control" name="EmployeeId" id="EmployeeId" onchange="showData()">
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.Id">@item.Name ~ @item.Username</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label class="control-label col-md-3">Date:</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control datepicker" id="date" readonly />
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="updateform">
+        <h3 id="label"></h3>
+        <input type="text" id="atId" class="hide"/>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label col-md-3">Check In:</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control daterangepicker" id="checkin" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label col-md-3">Checkout:</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control daterangepicker" id="checkout" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label col-md-2"></label>
+                <div class="col-md-10">
+                    <input type="button" class="btn btn-default" value="Click" onclick="updateData()"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<br>
+
+<script>
+    $(document).ready(function () {
+        $('.daterangepicker').datetimepicker({
+            format: 'M d, Y h:m:s A',
+            minDate: getFormattedDate(new Date())
+        });
+
+        function getFormattedDate(date) {
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear().toString().slice(2);
+            return day + '-' + month + '-' + year;
+        }
+        $('#date').datepicker(
+                            {
+                                dateFormat: 'MM dd, yy',
+                                changeMonth: true,
+                                changeYear: true,
+                                beforeShow: function (input, instance) {
+                                    $(input).datepicker('setDate', new Date());
+                                },
+                                onSelect: function () {
+                                    showData();
+                                }
+                            });
+    });
+
+    function showData()
+    {
+        var id = $('#EmployeeId').val();
+        var date = moment($('#date').val()).format('MM/DD/YYYY');
+
+        if (date != 'Invalid date') {
+            $.ajax({
+                url: '/Attendances/GetDetails',
+                type: 'post',
+                data: { Id: id, Date: date },
+                dataType: 'json',
+                success: function (data) {
+                    $('#updateform').show();
+                    var res = Object.keys(data).length;
+                    if (res == 1) {
+                        $('#label').html('Update');
+                        $('#atId').val(data[0].Id);
+                        $('#checkin').val(moment(data[0].InTime).format('MMM DD, YYYY hh:mm:ss A'));
+                        $('#checkout').val(moment(data[0].OutTime).format('MMM DD, YYYY hh:mm:ss A'));
+
+                    }
+                    else if (res == 0) {
+                        $('#atId').val(0);
+                        $('#label').html('Data not found! Insert new.');
+                    }
+                    
+                },
+                error: function (data) {
+                    $('#updateform').hide();
+                    console.log(data.error);
+                }
+            });
+        }
+    }
+
+
+    function updateData() {
+        var date = moment($('#date').val()).format('MM/DD/YYYY');
+        var checkin = moment($('#checkin').val()).format('MM/DD/YYYY hh:mm:ss A');
+        var checkout = moment($('#checkout').val()).format('MM/DD/YYYY hh:mm:ss A');
+        var id = $('#atId').val();
+        var empId = $('#EmployeeId').val();
+
+        //console.log(date + ' ---- ' + checkin + ' ------- ' + checkout);
+
+        if (checkout != 'Invalid date' && checkin != 'Invalid date' && date != 'Invalid date') {
+            $.ajax({
+                url: '/Attendances/UpdateDetails',
+                type: 'post',
+                data: { Id: id, InTime: checkin, OutTime: checkout, EmployeeId: empId, Date: date },
+                dataType: 'json',
+                success: function (data) {
+                    if (data == 1) {
+                        alert('Successfully done');
+                        window.location.href = "/Attendances/Updatetime"
+                    }
+                    else {
+                        alert('Error');
+                    }
+                },
+                error: function (data) {
+                    $('#updateform').hide();
+                    console.log(data.error);
+                }
+            });
+        }
+        else {
+            alert('Invalid checkin/checkout time.');
+        }
+    }
+</script>

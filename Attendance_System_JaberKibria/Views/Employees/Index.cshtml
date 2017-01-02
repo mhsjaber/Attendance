@@ -1,0 +1,46 @@
+﻿@model Attendance_System_JaberKibria.ViewModels.AttendanceViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_employee.cshtml";
+}
+<h2>Welcome @Session["Name"] <small>@Session["Username"]</small></h2>
+
+@if (Convert.ToInt32(ViewData["Count"]) == 1)
+{
+    if (Model.InTime != null)
+    {
+        <h3>Check in submitted at @Model.InTime</h3>
+    }
+    else
+    {
+    <div class="col-sm-4">
+        <form action="/Employees/CheckIn" method="post">
+            <input type="submit" value="Check In" class="btn btn-default" />
+        </form>
+    </div>
+    }
+
+    if (Model.OutTime != null)
+    {
+        <h3>Check out submitted at @Model.OutTime</h3>
+    }
+    else
+    {
+    <div class="col-sm-4">
+
+        <form action="/Employees/Checkout" method="post">
+            <input type="submit" value="Check Out" class="btn btn-default" />
+        </form>
+    </div>
+    }
+
+    if (ViewBag.Message != null) {
+        @Html.Raw(ViewBag.Message);
+    }
+}
+else
+{
+    <h2> Proper data not found! Contact admin.</h2>
+}
+<div class="clearfix"></div>
+
